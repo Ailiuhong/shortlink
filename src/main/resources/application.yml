@@ -1,0 +1,50 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: shortlink
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:shortlink}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 3000
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 500ms
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    banner: false
+
+app:
+  base-url: ${SHORTLINK_BASE_URL:http://localhost:8080}
+  zone-id: Asia/Shanghai
+  cache:
+    local-max-size: 10000
+    local-ttl: 10m
+    redis-ttl: 1h
+    null-redis-ttl: 5m
+  rate-limit:
+    enabled: true
+    max-requests: 20
+    window: 1m
+    key-prefix: "shortlink:rate:create:"
+  url:
+    blocked-hosts:
+      - localhost
+      - 127.0.0.1
+      - 0.0.0.0
+
+logging:
+  level:
+    com.example.shortlink: info
